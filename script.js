@@ -109,15 +109,21 @@ formulario.addEventListener('submit', function(e) {
 
   const alumno = document.getElementById('alumno').value;
   const curso = document.getElementById('curso').value;
-  const libro = document.getElementById('libro').value;
+  const libroNombre = document.getElementById('libro').value;
   const fecha = document.getElementById('fecha').value;
+
+  const libroEncontrado = baseDeDatosLibros.find(l => l.titulo.toLowerCase() === libroNombre.toLowerCase().trim());
+  if (libroEncontrado) {
+    libroEncontrado.estado = "Prestado";
+    buscarLibros();
+  }
 
   const nuevaFila = document.createElement('tr');
 
   nuevaFila.innerHTML = `
     <td>${alumno}</td>
     <td>${curso}</td>
-    <td>${libro}</td>
+    <td>${libroNombre}</td>
     <td>${fecha}</td>
     <td>En Préstamo</td>
     <td><button class="btn-devolver" onclick="eliminarFila(this)">Devolver Libro</button></td>
@@ -129,5 +135,13 @@ formulario.addEventListener('submit', function(e) {
 
 function eliminarFila(boton) {
   const fila = boton.parentElement.parentElement;
+  const libroNombre = fila.children[2].textContent.trim();
+
+  const libroEncontrado = baseDeDatosLibros.find(l => l.titulo.toLowerCase() === libroNombre.toLowerCase());
+  if (libroEncontrado) {
+    libroEncontrado.estado = "Disponible";
+    buscarLibros();
+  }
+
   fila.remove();
 }
